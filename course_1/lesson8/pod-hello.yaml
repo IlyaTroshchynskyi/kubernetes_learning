@@ -1,0 +1,24 @@
+#-------------------------------------------------------------
+# Simpliest Manifest File to create Pod with one Container
+#
+
+apiVersion : v1
+kind: Pod
+metadata:
+  name: hello
+  labels:
+    env  : prod
+    app  : main
+    tier : frontend
+    owner: Ilya
+spec:
+  containers:
+    - name : container-hello
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+
+    - name : container-api
+      image: tomcat:8.5.38
+      ports:
+        - containerPort: 8080

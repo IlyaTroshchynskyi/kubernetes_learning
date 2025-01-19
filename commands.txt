@@ -1,0 +1,106 @@
+Start a cluster by running:
+minikube start
+
+
+Access the Kubernetes dashboard running within the minikube cluster:
+
+minikube dashboard
+
+
+minikube stop
+
+
+minikube delete
+
+
+Get pods
+
+minikube kubectl -- get pods
+
+
+
+kubectl run hello --image=adv4000/k8sphp:latest --port=80
+
+kubectl get pods 
+
+kubectl delete pods hello
+
+
+kubectl describe pods hello
+
+
+kubectl exec -it hello -- sh
+
+
+kubectl logs hello
+
+kubectl apply -f pod-hello.yaml
+
+
+kubectl delete -f pod-hello.yaml
+
+
+#### DEPLOYMENTS
+
+kubectl create deployment illia-deployment --image=adv4000/k8sphp:latest
+
+kubectl describe deployment illia-deployment
+
+kubectl scale deployment illia-deployment --replicas 4
+
+kubectl autoscale deployment illia-deployment --min=4 --max=6 --cpu-percent=80
+
+# see the history of deployments
+
+kubectl rollout history deployment/illia-deployment 
+
+
+kubectl set image deployment/illia-deployment illia-deployment-99fd989f9-6sxpd=adv4000/k8sphp:version1 --record=true
+
+
+kubectl rollout undo deployment/ilya-deployment
+
+# Забрать последний имедж снова
+kubectl rollout restart deployment/illia-deployment
+
+
+
+
+### SERVICES
+
+kubectl create deployment illia-deployment --image=adv4000/k8sphp:latest
+
+kubectl scale deployment illia-deployment --replicas 3
+
+kubectl expose deployment illia-deployment --type=ClusterIP --port 80
+
+
+kubectl get services
+
+kubectl exec -it illia-deployment-99fd989f9-87rk7 -- sh
+curl 10.104.242.168
+
+
+kubectl delete service illia-deployment
+
+## NodePort
+kubectl expose deployment illia-deployment --type=NodePort --port 80
+
+
+
+kubectl expose deployment illia-deployment --type=LoadBalancer --port 80
+
+зайти на кластер 
+minikube ssh
+
+
+
+### INGRESS Controllers
+kubectl apply -f https://projectcontour.io/quickstart/contour.y
+kubectl get services -n projectcontour
+
+kubectl create deployment illia-deployment --image=adv4000/k8sphp:latest
+kubectl scale deployment illia-deployment --replicas 2
+
+kubectl expose deployment illia-deployment --type=ClusterIP --port 80 
+
