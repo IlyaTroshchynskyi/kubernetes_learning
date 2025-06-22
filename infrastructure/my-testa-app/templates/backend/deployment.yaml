@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "backend-{{ .Values.environment.env }}"
+  labels:
+    app: "backend-{{ .Values.environment.env }}"
+
+
+spec:
+  replicas: {{ .Values.backendApp.countReplicas }}
+  selector:
+    matchLabels:
+     project: "backend-{{ .Values.environment.env }}"
+  template:
+    metadata:
+      labels:
+        project: "backend-{{ .Values.environment.env }}"
+    spec:
+
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backendApp.image.repository }}:{{ .Values.backendApp.image.tag }}"
+          imagePullPolicy: {{ .Values.backendApp.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backendApp.port }}
+              protocol: TCP
+
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: {{ .Values.backendApp.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          envFrom:
+            - configMapRef:
+                name: fastapi-app-config
+            - secretRef: # Your sensitive config
+                name: fastapi-app-secrets

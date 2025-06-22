@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.frontendApp.serviceName}}-{{ .Values.environment.env }}"
+  labels:
+   app: "{{ .Values.frontendApp.serviceName}}-{{ .Values.environment.env }}"
+spec:
+  selector:
+    project: "{{ .Values.frontendApp.serviceName}}-{{ .Values.environment.env }}"
+
+  type: {{ .Values.frontendApp.serviceType }}
+  ports:
+    - port: {{ .Values.frontendApp.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
