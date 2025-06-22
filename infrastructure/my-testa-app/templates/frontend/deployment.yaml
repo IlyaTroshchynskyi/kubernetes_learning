@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
+  labels:
+    app: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
+
+
+spec:
+  replicas: {{ .Values.frontendApp.countReplicas }}
+  selector:
+    matchLabels:
+     project: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
+  template:
+    metadata:
+      labels:
+        project: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
+    spec:
+
+      containers:
+        - name: {{ .Values.frontendApp.containerName }}
+          image: "{{ .Values.frontendApp.image.repository }}:{{ .Values.frontendApp.image.tag }}"
+          imagePullPolicy: {{ .Values.frontendApp.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontendApp.port }}
+              protocol: TCP
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.frontendApp.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          envFrom:
+            - configMapRef:
+                name: frontend-app-config

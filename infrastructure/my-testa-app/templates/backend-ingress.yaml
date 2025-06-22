@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    # Important line. Without this line we get html code from frontend
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: your-app.com
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            # Make sure this is the exact name of your backend service
+            name: {{ .Values.backendApp.serviceName }}-{{  .Values.environment.env}}
+            port:
+              number: {{ .Values.backendApp.port }}

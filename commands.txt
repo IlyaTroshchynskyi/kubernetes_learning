@@ -1,5 +1,8 @@
 Start a cluster by running:
 minikube start
+зайти на кластер
+minikube ssh
+kubectl get events --watch
 
 
 Access the Kubernetes dashboard running within the minikube cluster:
@@ -37,8 +40,19 @@ kubectl logs hello
 kubectl apply -f pod-hello.yaml
 
 
-kubectl delete -f pod-hello.yaml
+kubectl delete -f pod-hello.ya
 
+
+Take all pods with label run
+kubectl get po -l run
+
+not equal run
+kubectl get po -l '!run'
+
+kubectl get po -l 'environment in (dev)'
+
+Add annotations
+kubectl annotate pod app-kuber-2 company_name/creator_email='dveloper@examole.com'
 
 #### DEPLOYMENTS
 
@@ -103,4 +117,139 @@ kubectl create deployment illia-deployment --image=adv4000/k8sphp:latest
 kubectl scale deployment illia-deployment --replicas 2
 
 kubectl expose deployment illia-deployment --type=ClusterIP --port 80 
+
+
+### Update kubectl cluster localy
+
+aws eks --region eu-west-2 update-kubeconfig --name name cluster
+
+
+
+
+### Dashboard
+How to set up access to dashboard
+https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+
+
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+
+
+
+Replication-Controller
+kubectl apply -f rep-controller.yaml
+
+
+kubectl get rc
+
+kubectl delete rc kuber-rc
+
+ReplicaSet - more modern
+
+
+
+### HELM
+
+Installing Helm: https://helm.sh/docs/intro/install/
+
+Helm create:
+
+helm create demo-chart
+
+The Chart File Structure: https://helm.sh/docs/topics/charts/#the-chart-file-structure
+
+Predefined Values: https://helm.sh/docs/topics/charts/#predefined-values
+
+Get current context
+kubectl config current-context
+
+Install App:
+
+helm install my-testa-app ./my-testa-app -f ./my-testa-app/dev_values.yaml
+
+Port forward
+kubectl --namespace=default port-forward $PORT_NAME 80:$CONTAINER_PORT
+
+List all available releases across all namespaces:
+
+helm list --all-namespaces
+
+The status of a specific release:
+
+helm status demo-app
+
+Display the release history:
+
+helm history my-testa-app
+
+Simulate an upgrade of release with debug:
+
+helm upgrade my-testa-app ./my-testa-app --debug --dry-run
+
+Release upgrade:
+
+helm upgrade my-testa-app ./my-testa-app  -f ./my-testa-app/dev_values.yaml --debug --wait
+
+Helm upgrade options: https://helm.sh/docs/helm/helm_upgrade/#options
+
+Helm install options: https://helm.sh/docs/helm/helm_install/#options
+
+helm upgrade demo-app ./my-testa-app --set image.tag=1.212121
+
+Roll back a release:
+
+helm rollback demo-app 1
+
+Release upgrade with rolls back in case of failed upgrade:
+
+helm upgrade demo-app ./my-testa-app --debug --atomic --timeout 20s --set image.tag=1.212121
+
+Install App in namespace:
+
+helm upgrade --install ./my-testa-app ./my-testa-app -f my-testa-app/dev_values.yaml -n app --create-namespace --dry-run
+
+helm template ./my-testa-app ./demo-chart -f demo-chart/values-dev.yaml
+
+helm upgrade --install ./my-testa-app ./demo-chart -f demo-chart/values-dev.yaml -n app --create-namespace
+
+Chart Management:
+
+helm lint my-testa-app
+
+helm package demo-chart
+
+helm upgrade --install demo-app-test demo-chart-0.1.0.tgz --dry-run
+
+Helm Secrets:
+
+kubectl get secrets/sh.helm.release.v1.demo-app.v2 --template={{.data.release}} | base64 -D | base64 -D | gzip -cd > release_decoded
+
+echo -n "" | base64 --decode > ingr.yaml
+
+Uninstall Apps:
+
+helm uninstall my-testa-app
+
+helm uninstall demo-app-test -n app
+
+Helm pull:
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+helm repo update
+
+helm search repo prometheus-community/kube-prometheus-stack
+
+helm pull prometheus-community/kube-prometheus-stack
+
+
+Get pods from ingress controller
+kubectl get pods --namespace ingress-nginx
+
+Check ingress
+kubectl describe ingress backend-ingress
+
+
+How to work with ingress in minikube
+https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+curl --resolve "your-app.com:80:$( minikube ip )" -i http://your-app.com
 

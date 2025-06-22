@@ -1,0 +1,72 @@
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 2
+
+environment:
+  env: dev
+
+backendApp:
+  image:
+    repository: "ilya0108/my-app"
+    pullPolicy: "Always"
+    tag: "latest"
+  port: 8010
+  countReplicas: 2
+  serviceType: ClusterIP
+  serviceName: "backend"
+
+
+frontendApp:
+  image:
+    repository: "ilya0108/react-app"
+    pullPolicy: "Always"
+    tag: "v1.0"
+  port: 80
+  countReplicas: 1
+  serviceType: ClusterIP
+  containerName: "frontend-test-app"
+  serviceName: "frontend"
+
+# This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+#This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+
+# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+#This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  frontendReplicas: 1
+  backendReplicas: 2
+  # targetMemoryUtilizationPercentage: 80

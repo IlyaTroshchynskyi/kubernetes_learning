@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuber
+  labels:
+    app: kuber
+spec:
+  selector:
+    matchLabels:
+      app: http-server
+
+  template:
+    metadata:
+      labels:
+        app: http-server
+
+    spec:
+      containers:
+        - name: kuber-app
+          image: ilya0108/my-app:latest
+          ports:
+            - containerPort: 8010
+
+  replicas: 5
+  minReadySeconds: 10
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+
