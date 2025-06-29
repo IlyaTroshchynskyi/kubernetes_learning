@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = 'Backend v1'
     PROJECT_DESCRIPTION: str
     API_KEY: str
+    SUPER_PASSWORD_DB: str
 
     model_config = SettingsConfigDict(
         case_sensitive=True,

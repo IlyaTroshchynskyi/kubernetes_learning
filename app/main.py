@@ -18,16 +18,19 @@ router = APIRouter(tags=['Admin'])
 
 @router.get('/', status_code=200)
 async def handle_request():
+    logging.info('Main route')
     s = get_settings()
     html_content = (f"<div>"
                     f"<p1>Hello World version={s.PROJECT_NAME}</p>"
                     f"<p1>Description={s.PROJECT_DESCRIPTION}</p>"
                     f"<p1>Key={s.API_KEY}</p>"
+                    f"<p1>Password DB from parameter store={s.SUPER_PASSWORD_DB}</p>"
                     f"</div>")
     return HTMLResponse(content=html_content, status_code=200)
 
 @router.get('/users', status_code=200)
 async def get_users():
+    logging.info('Get users')
     return [{'id': 1, 'name': 'John', 'age': 18}, {'id': 2, 'name': 'Jane', 'age': 20}]
 
 
