@@ -2,10 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frontend-ingress
-  annotations:
-    # We only need to specify the ingress class
-    kubernetes.io/ingress.class: "nginx"
+  namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
 spec:
+  ingressClassName: nginx
   rules:
   - host: your-app.com
     http:
@@ -14,7 +13,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            # Make sure this is the exact name of your frontend service
             name: {{ .Values.frontendApp.serviceName }}-{{  .Values.environment.env}}
             port:
               number: {{ .Values.frontendApp.port }}

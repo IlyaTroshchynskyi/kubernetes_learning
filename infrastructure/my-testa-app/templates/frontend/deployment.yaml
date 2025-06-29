@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
+  namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
   labels:
     app: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
 

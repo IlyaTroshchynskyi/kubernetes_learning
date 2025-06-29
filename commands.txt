@@ -165,6 +165,7 @@ kubectl config current-context
 Install App:
 
 helm install my-testa-app ./my-testa-app -f ./my-testa-app/dev_values.yaml
+helm upgrade my-testa-app ./my-testa-app -f ./my-testa-app/dev_values.yaml
 
 Port forward
 kubectl --namespace=default port-forward $PORT_NAME 80:$CONTAINER_PORT
@@ -205,11 +206,11 @@ helm upgrade demo-app ./my-testa-app --debug --atomic --timeout 20s --set image.
 
 Install App in namespace:
 
-helm upgrade --install ./my-testa-app ./my-testa-app -f my-testa-app/dev_values.yaml -n app --create-namespace --dry-run
+helm upgrade --install my-testa-app ./my-testa-app -f my-testa-app/dev_values.yaml -n app --create-namespace --dry-run
 
 helm template ./my-testa-app ./demo-chart -f demo-chart/values-dev.yaml
 
-helm upgrade --install ./my-testa-app ./demo-chart -f demo-chart/values-dev.yaml -n app --create-namespace
+helm upgrade --install my-testa-app ./demo-chart -f demo-chart/values-dev.yaml -n app --create-namespace
 
 Chart Management:
 
@@ -253,3 +254,29 @@ How to work with ingress in minikube
 https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
 curl --resolve "your-app.com:80:$( minikube ip )" -i http://your-app.com
 
+
+
+
+Add creds of aws for kubectl
+
+kubectl create secret generic aws-credentials \
+  --from-literal=accessKeyId='YOUR_COPIED_ACCESS_KEY_ID' \
+  --from-literal=secretAccessKey='YOUR_COPIED_SECRET_ACCESS_KEY' \
+  --namespace external-secrets
+
+
+helm install my-testa-app ./my-testa-app -f ./my-testa-app/dev_values.yaml
+helm install my-testa-app ./my-testa-app -f ./my-testa-app/dev_values.yaml --namespace default --set awsCredentials.accessKeyId='' --set awsCredentials.secretAccessKey=''
+  --set awsCredentials.accessKeyId='' \
+  --set awsCredentials.secretAccessKey=''
+
+
+  if we want to update secret from parameter store we need to delete the db credential in secret
+  they will be recreated and picj up new value/
+  then we delete our pods and after restart they pick up new values
+
+
+
+## Restart deployment
+
+ kubectl rollout restart deployment backend-dev

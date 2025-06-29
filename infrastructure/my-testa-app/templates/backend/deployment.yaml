@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "backend-{{ .Values.environment.env }}"
+  namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
   labels:
     app: "backend-{{ .Values.environment.env }}"
 
@@ -32,6 +33,19 @@ spec:
               port: {{ .Values.backendApp.port }}
             initialDelaySeconds: 10
             periodSeconds: 5
+
+          env:
+            # Mount the specific key from the secret created by ESO
+            - name: SUPER_PASSWORD_DB # The env var name your app will see
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials # The name of the K8s Secret created by ESO
+                  key: SUPER_PASSWORD_DB # The key within that Secret
+
+          # Can be instead of above constructure
+          # envFrom:
+          #   - secretRef:
+          #       name: db-credentials
 
           envFrom:
             - configMapRef:

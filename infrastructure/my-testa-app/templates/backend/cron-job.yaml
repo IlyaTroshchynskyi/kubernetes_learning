@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-fastapi-cronjob
+  namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
+spec:
+  # Run every minute
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: my-fastapi-container-cron-job
+            image:  "{{ .Values.backendApp.image.repository }}:{{ .Values.backendApp.image.tag }}"
+            command: ["/bin/sh", "-c"]
+            args:
+            - |
+              python ./app/scheduled_tasks/task_1.py
+          restartPolicy: Never
