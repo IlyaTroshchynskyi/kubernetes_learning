@@ -21,6 +21,13 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backendApp.image.repository }}:{{ .Values.backendApp.image.tag }}"
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 512Mi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
           imagePullPolicy: {{ .Values.backendApp.image.pullPolicy }}
           ports:
             - name: http
@@ -33,6 +40,16 @@ spec:
               port: {{ .Values.backendApp.port }}
             initialDelaySeconds: 10
             periodSeconds: 5
+{{/*      affinity:*/}}
+{{/*        nodeAffinity:*/}}
+{{/*          requiredDuringSchedulingIgnoredDuringExecution:*/}}
+{{/*            nodeSelectorTerms:*/}}
+{{/*              - matchExpressions:*/}}
+{{/*                  - key: topology.kubernetes.io/zone*/}}
+{{/*                    operator: In*/}}
+{{/*                    values:*/}}
+{{/*                      - eu-west-1a*/}}
+{{/*                      - eu-west-1c*/}}
 
           env:
             # Mount the specific key from the secret created by ESO

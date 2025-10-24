@@ -21,6 +21,13 @@ spec:
       containers:
         - name: {{ .Values.frontendApp.containerName }}
           image: "{{ .Values.frontendApp.image.repository }}:{{ .Values.frontendApp.image.tag }}"
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 512Mi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
           imagePullPolicy: {{ .Values.frontendApp.image.pullPolicy }}
           ports:
             - name: http
