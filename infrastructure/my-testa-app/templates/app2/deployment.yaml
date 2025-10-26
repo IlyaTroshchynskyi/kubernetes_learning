@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "app2-{{ .Values.environment.env }}"
+  namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
+  labels:
+    app: "app2-{{ .Values.environment.env }}"
+
+spec:
+  replicas: {{ .Values.app2.countReplicas }}
+  selector:
+    matchLabels:
+     project: "app2-{{ .Values.environment.env }}"
+  template:
+    metadata:
+      labels:
+        project: "app2-{{ .Values.environment.env }}"
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+        - name: app2
+          image: "{{ .Values.app2.image.repository }}:{{ .Values.app2.image.tag }}"
+          resources:
+            limits:
+              cpu: "0.3"
+              memory: 256Mi
+            requests:
+              cpu: "0.2"
+              memory: 128Mi
+          imagePullPolicy: {{ .Values.app2.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app2.port }}
+              protocol: TCP
+
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: {{ .Values.app2.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: {{ .Values.app2.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 10

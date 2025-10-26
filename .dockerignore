@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Cache
+.mypy_cache/
+.pytest_cache/
+
+# Course materials (if not needed in container)
+course_1/
+course_2/
+
+# Other
+.env
+*.md
+Makefile
+docker-compose.yaml
+Dockerfile
+commands.txt
+kuber-front-app
+infrastructure

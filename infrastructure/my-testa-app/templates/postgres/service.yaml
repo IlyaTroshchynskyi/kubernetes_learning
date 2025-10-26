@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "postgres-{{ .Values.environment.env }}"
+  namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
+  labels:
+    app: "postgres-{{ .Values.environment.env }}"
+spec:
+  selector:
+    app: "postgres-{{ .Values.environment.env }}"
+
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+      name: postgres

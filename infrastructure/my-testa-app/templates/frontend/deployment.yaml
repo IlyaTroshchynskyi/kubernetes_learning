@@ -16,6 +16,8 @@ spec:
     metadata:
       labels:
         project: "{{ .Values.frontendApp.serviceName }}-{{ .Values.environment.env }}"
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
     spec:
 
       containers:
