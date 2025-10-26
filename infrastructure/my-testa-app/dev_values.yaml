@@ -3,6 +3,7 @@ replicaCount: 2
 appName:
   name: supper-app
 
+host: "your-app.com"
 
 environment:
   env: dev
@@ -17,6 +18,17 @@ backendApp:
   serviceType: ClusterIP
   serviceName: "backend"
 
+postgres:
+  image:
+    repository: "postgres"
+    tag: "16-alpine"
+    pullPolicy: "IfNotPresent"
+  database: "myappdb"
+  username: "appuser"
+  password: "postgres123"
+  storage:
+    size: "5Gi"
+
 
 frontendApp:
   image:
@@ -28,6 +40,16 @@ frontendApp:
   serviceType: ClusterIP
   containerName: "frontend-test-app"
   serviceName: "frontend"
+
+app2:
+  image:
+    repository: "ilya0108/app2"
+    pullPolicy: "Always"
+    tag: "latest"
+  port: 8020
+  countReplicas: 1
+  serviceType: ClusterIP
+  serviceName: "app2"
 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []

@@ -4,6 +4,6 @@ metadata:
   name: frontend-app-config
   namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
 data:
-  VITE_BASE_URL: ""
+  VITE_BASE_URL: "http://{{ .Values.host }}"
   VITE_ENV: "{{ .Values.environment.env}}"
-  VITE_DESCRIPTION: "Description"
+  VITE_DESCRIPTION: "{{ .Values.frontendApp.description | default "Description" }}"

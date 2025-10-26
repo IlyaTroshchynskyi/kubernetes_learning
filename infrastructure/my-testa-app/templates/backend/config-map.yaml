@@ -5,3 +5,5 @@ metadata:
   namespace: "{{ .Values.appName.name}}-{{ .Values.environment.env}}"
 data:
   PROJECT_DESCRIPTION: "Description proj"
+  DATABASE_URL: "postgresql://{{ .Values.postgres.username }}:{{ .Values.postgres.password }}@postgres-{{ .Values.environment.env }}:5432/{{ .Values.postgres.database }}"
+  APP2_URL: "http://{{ .Values.app2.serviceName }}-{{ .Values.environment.env }}:{{ .Values.app2.port }}"

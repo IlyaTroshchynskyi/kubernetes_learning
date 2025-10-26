@@ -16,6 +16,8 @@ spec:
     metadata:
       labels:
         project: "backend-{{ .Values.environment.env }}"
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
     spec:
 
       containers:
@@ -36,10 +38,16 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /health-check
+              path: /api/health-check
               port: {{ .Values.backendApp.port }}
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/health-check
+              port: {{ .Values.backendApp.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
 {{/*      affinity:*/}}
 {{/*        nodeAffinity:*/}}
 {{/*          requiredDuringSchedulingIgnoredDuringExecution:*/}}

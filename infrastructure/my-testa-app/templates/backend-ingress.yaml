@@ -7,9 +7,9 @@ metadata:
     # Important line. Without this line we get html code from frontend
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  ingressClassName: nginx # <-- The new, correct field is added here
+  ingressClassName: nginx
   rules:
-  - host: your-app.com
+  - host: {{ .Values.host }}
     http:
       paths:
       - path: /api(/|$)(.*)
